@@ -46,13 +46,18 @@ def forge():
     db.session.commit()
     click.echo('Done')
 
+@app.context_processor
+def inject_user():
+    user = User.query.first()
+    return dict(user=user)
+# 相当于全局变量
 
-
-# 通过数据库加入，应该不需要这段了
+@app.errorhandler(404)
+def  page_not_found(e):
+    return render_template('404.html'),404
 
 @app.route('/')
 def index():
-    user = User.query.first()
     movies = Movie.query.all()
-    return render_template('index.html',user=user,movies=movies)
+    return render_template('index.html',movies=movies)
 
